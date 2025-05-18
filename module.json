@@ -27,5 +27,14 @@
             },
             "flags": {}
         }
+    ],
+    "scripts": [
+        "scripts/metal-gear-codec-config.js"
+    ],
+    "templates": [
+        "templates/metal-gear-codec-screen.html"
+    ],
+    "styles": [
+        "styles/metal-gear-codec-screen.css"
     ]
 }

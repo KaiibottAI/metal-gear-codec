@@ -1,91 +1,19 @@
-<html lang="en">
+<div class="codec-container">
+    <div class="portrait left">
+        <img src="{{leftPortrait}}" alt="Left Portrait" />
+    </div>
 
-<head>
-    <title>Website</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Orbitron:700" rel="stylesheet">
-    <link href="../styles/metal-gear-codec-screen.css" rel="stylesheet">
-</head>
-
-<body>
-    --- <!-- Take this piece out and the whole thing comes crumbling down! -->
-    <div id="mCodec">
-        <div id="main-con">
-            <div id="contact_1" class="grid-box codec-col">
-                <div id="char-1" class="char-box">
-                    <div class="overlay">
-                    </div>
-                </div>
-            </div>
-            <div id="main-receiver" class="body-box codec-col">
-                <div id="codec_banner" class="banner">
-                    <h2>PTT</h2>
-                </div>
-
-                <div id="r_box">
-                    <div id="left" class="arrow">
-                        <i class="fa fa-caret-left caret" aria-hidden="true"></i>
-                    </div>
-                    <div id="receiver-box">
-                        <div id="bars-con">
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                            <div class="bar"></div>
-                        </div>
-                        <div id="freq-con">
-                            <h2 id="freq" class="freq"></h2>
-                        </div>
-                    </div>
-                    <div id="right" class="arrow">
-                        <i class="fa fa-caret-right caret" aria-hidden="true"></i>
-                    </div>
-                </div>
-
-                <div id="memory_banner" class="banner">
-                    <h2>MEMORY</h2>
-                </div>
-            </div>
-            <div id="contact_2" class="grid-box codec-col">
-                <div id="char-2" class="char-box">
-                    <div class="overlay">
-                    </div>
-                </div>
-            </div>
+    <div class="codec-info">
+        <div class="name-frequency">
+            <div class="name">{{name}}</div>
+            <div class="frequency">{{frequency}}</div>
         </div>
-
-        <div id="text-con">
-            <h2 id="c-char"></h2>
-            <h3 id="text"></h3>
-        </div>
-
-        <div id="alt-box">
-            <div id="left_2" class="left arrow">
-                <i class="fa fa-caret-left caret" aria-hidden="true"></i>
-            </div>
-            <div class="freq-con">
-                <h2 id="freq_2" class="freq"></h2>
-            </div>
-            <div id="right_2" class="right arrow">
-                <i class="fa fa-caret-right caret" aria-hidden="true"></i>
-            </div>
+        <div class="dialogue-box">
+            <p>{{text}}</p>
         </div>
     </div>
 
-    <div id="dummy-div">
+    <div class="portrait right">
+        <img src="{{rightPortrait}}" alt="Right Portrait" />
     </div>
-
-    <div id="dummy-div_2">
-    </div>
-    <script src="../scripts/metal-gear-codec.js"></script>
-</body>
-
-</html>
+</div>
