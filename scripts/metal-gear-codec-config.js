@@ -2,6 +2,15 @@ const moduleName = 'metal-gear-codec'
 
 class MGSCodec extends Application {
 
+    constructor(data = {}, options = {}) {
+        super(options);
+        this.leftPortrait = data.leftPortrait || "modules/metal-gear-codec/images/static.gif";
+        this.rightPortrait = data.rightPortrait || "modules/metal-gear-codec/images/static.gif";
+        this.name = data.name || 'Snaaaaake';
+        this.frequency = data.frequency || frequencyOptions[Math.floor(Math.random() * frequencyOptions.length)];
+        this.text = data.text || dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)];
+    }
+
     // Please help, I don't know how to get some default stuff to stick. I have it down in the ready hook since I can't figure it :D
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
@@ -16,19 +25,19 @@ class MGSCodec extends Application {
         });
     }
 
-    // get the selected token(s) for the codec image selection
-    #getSelectedTokensForCodec() {
-        const selectedToken = canvas.tokens.controlled[0];
-        return selectedToken?.actor?.img || "modules/metal-gear-codec/images/static.gif";
-    }
+    // // get the selected token(s) for the codec image selection
+    // #getSelectedTokensForCodec() {
+    //     const selectedToken = canvas.tokens.controlled[0];
+    //     return selectedToken;
+    // }
 
     getData() {
         return {
-            leftPortrait: "modules/metal-gear-codec/images/static.gif",
-            rightPortrait: this.#getSelectedTokensForCodec(),
-            name: "Solid Snake",
-            frequency: frequencyOptions[Math.floor(Math.random() * frequencyOptions.length)],
-            text: dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)]
+            leftPortrait: this.leftPortrait,
+            rightPortrait: this.rightPortrait,
+            name: this.name,
+            frequency: this.frequency,
+            text: this.text
         };
     }
 
@@ -103,11 +112,11 @@ const frequencyOptions = [
 ]
 
 // toggle the MGSCodec window
-function toggleCodecScreen() {
+function toggleCodecScreen(data) {
     // Ensure an instance exists
     // courtesy of @mxzf from FoundryVTT Discord 
     // JS has a fun little ??= operator, nullish coalescing assignment, which says "if this thing exists, cool; if it doesn't, assign this to it"
-    ui['MGSCodec'] ??= new MGSCodec();
+    ui['MGSCodec'] ??= new MGSCodec(data);
     // If it's already rendered, close it (this doesn't delete it, it simply closes the app)
     if (ui.MGSCodec.rendered) ui.MGSCodec.close();
     // Otherwise, if it's not rendered, render it
@@ -122,6 +131,7 @@ function applyCodecTheme(theme) {
 
 // socket to open the codec screen for everyone
 function openCodecForAll() {
+
     if (game.user !== game.users.activeGM) {
         ui.notifications.warn(`${moduleName} | Only the GM can open the codec for everyone`)
         return;
@@ -129,13 +139,26 @@ function openCodecForAll() {
         ui.notifications.info(`${moduleName} | Sending Codec to everyone`);
     };
 
+    // Get Selected token
+    function getSelectedTokensForCodec() {
+        const selectedToken = canvas.tokens.controlled[0];
+        return selectedToken;
+    };
+
+    const tokenForCodecScreen = getSelectedTokensForCodec()
+
+    // ui.notifications.warn(`${moduleName} | working token uuid of ${tokenForCodecScreen?.actor._id}`)
+
     // socket that sends the 'open' command to the other clients
     game.socket.emit(`module.${moduleName}`, {
-        action: "openCodec"
+        action: "openCodec",
+        data: {
+            token: tokenForCodecScreen?.actor._id
+        }
     });
 
     // open the codec for the initiator as well
-    toggleCodecScreen();
+    toggleCodecScreen(tokenForCodecScreen?.actor._id);
 }
 
 Hooks.once("init", () => {
@@ -166,8 +189,9 @@ Hooks.once("ready", () => {
     // sockets
     game.socket.on(`module.${moduleName}`, (payload) => {
         if (payload.action === "openCodec") {
-            ui.notifications.info(`${moduleName} | recieving codec transmission`)
-            toggleCodecScreen()
+            ui.notifications.info(`${moduleName} | recieving codec transmission`);
+            // ui.notifications.info(`${moduleName} | working token uuid of ${payload.data.token}`);
+            toggleCodecScreen(payload.data);
         };
     });
 
