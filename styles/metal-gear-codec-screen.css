@@ -10,28 +10,28 @@
 /* Different theme colours that seemed fun! */
 :root[data-mgs-codec-theme="classic"] {
 	--mgs-codec-background-color: #000000;
-	--mgs-codec-glow-color: magenta;
+	--mgs-codec-glow-color: #03FB8D;
 	--mgs-codec-text-color: #ffffff;
 	--mgs-codec-bolded-text: #d05151;
 }
 
 :root[data-mgs-codec-theme="cyberpunk-red"] {
 	--mgs-codec-background-color: #4a0404;
-	--mgs-codec-glow-color: magenta;
+	--mgs-codec-glow-color: #d31919;
 	--mgs-codec-text-color: #d31919;
 	--mgs-codec-bolded-text: #d05151;
 }
 
 :root[data-mgs-codec-theme="deep-blue"] {
 	--mgs-codec-background-color: #030056;
-	--mgs-codec-glow-color: magenta;
+	--mgs-codec-glow-color: #0900ff;
 	--mgs-codec-text-color: #0900ff;
 	--mgs-codec-bolded-text: #0059ff;
 }
 
 :root[data-mgs-codec-theme="fallout-nuclear"] {
 	--mgs-codec-background-color: #033000;
-	--mgs-codec-glow-color: magenta;
+	--mgs-codec-glow-color: #00ff00;
 	--mgs-codec-text-color: #00ff00;
 	--mgs-codec-bolded-text: #ebff00;
 }
@@ -46,7 +46,7 @@
 #metal-gear-codec .codec-container {
 	display: flex;
 	border: 2px solid var(--mgs-codec-glow-color);
-	background-color: #001100;
+	background-color: var(--mgs-codec-background-color);
 	padding: 10px;
 	height: 100%;
 	box-shadow: 0 0 10px var(--mgs-codec-glow-color);
@@ -62,7 +62,7 @@
 #metal-gear-codec .portrait img {
 	max-width: 100%;
 	border: 2px solid var(--mgs-codec-glow-color);
-	background-color: #003300;
+	background-color: var(--mgs-codec-background-color);
 }
 
 #metal-gear-codec .codec-info {
@@ -83,7 +83,7 @@
 
 #metal-gear-codec .dialogue-box {
 	margin-top: 10px;
-	background-color: #002200;
+	background-color: var(--mgs-codec-background-color);
 	border: 1px solid var(--mgs-codec-glow-color);
 	padding: 10px;
 	font-size: 1em;

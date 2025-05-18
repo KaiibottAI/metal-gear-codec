@@ -16,7 +16,7 @@ class MGSCodec extends Application {
         });
     }
 
-    getData(options) {
+    getData() {
         return {
             leftPortrait: "modules/metal-gear-codec/images/static.gif",
             rightPortrait: "modules/metal-gear-codec/images/static.gif",
@@ -40,6 +40,7 @@ function toggleCodecScreen() {
     // Otherwise, if it's not rendered, render it
     else ui.MGSCodec.render(true);
 };
+
 function applyCodecTheme(theme) {
     game.settings.set(moduleName, 'codecTheme', theme);
     document.documentElement.setAttribute('data-mgs-codec-theme', theme);
@@ -66,4 +67,11 @@ Hooks.once("init", () => {
         },
         requiresReload: false
     });
+});
+
+Hooks.once("ready", () => {
+
+    // Added these all down here since this is how I could get the settings to be 'retained' upon reloading. I still do not understand it.
+    applyCodecTheme(game.settings.get(moduleName, 'codecTheme'));
+
 });
