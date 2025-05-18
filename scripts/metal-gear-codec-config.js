@@ -5,7 +5,7 @@ class MGSCodec extends Application {
     constructor(data = {}, options = {}) {
         super(options);
         this.leftPortrait = data.leftPortrait || "modules/metal-gear-codec/images/static.gif";
-        this.rightPortrait = data.rightPortrait || "modules/metal-gear-codec/images/static.gif";
+        this.rightPortrait = data.img || "modules/metal-gear-codec/images/static.gif";
         this.name = data.name || 'Snaaaaake';
         this.frequency = data.frequency || frequencyOptions[Math.floor(Math.random() * frequencyOptions.length)];
         this.text = data.text || dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)];
@@ -113,10 +113,13 @@ const frequencyOptions = [
 
 // toggle the MGSCodec window
 function toggleCodecScreen(data) {
+
+    let foundToken = game.actors.get(data);
+
     // Ensure an instance exists
     // courtesy of @mxzf from FoundryVTT Discord 
     // JS has a fun little ??= operator, nullish coalescing assignment, which says "if this thing exists, cool; if it doesn't, assign this to it"
-    ui['MGSCodec'] ??= new MGSCodec(data);
+    ui['MGSCodec'] ??= new MGSCodec(foundToken);
     // If it's already rendered, close it (this doesn't delete it, it simply closes the app)
     if (ui.MGSCodec.rendered) ui.MGSCodec.close();
     // Otherwise, if it's not rendered, render it
