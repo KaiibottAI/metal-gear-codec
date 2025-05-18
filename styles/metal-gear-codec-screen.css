@@ -9,35 +9,44 @@
 
 /* Different theme colours that seemed fun! */
 :root[data-mgs-codec-theme="classic"] {
-	--mgs-codec-background-color: #000000;
+	--mgs-codec-background-color: #0F1E17;
+	--mgs-codec-dialogue-box-color: #0F1E17;
 	--mgs-codec-glow-color: #03FB8D;
 	--mgs-codec-text-color: #ffffff;
-	--mgs-codec-bolded-text: #d05151;
+	--mgs-codec-bar-on: #03FB8D;
+	--mgs-codec-bar-off: #397975;
 }
 
 :root[data-mgs-codec-theme="cyberpunk-red"] {
 	--mgs-codec-background-color: #4a0404;
+	--mgs-codec-dialogue-box-color: #ffffff;
 	--mgs-codec-glow-color: #d31919;
 	--mgs-codec-text-color: #d31919;
-	--mgs-codec-bolded-text: #d05151;
+	--mgs-codec-bar-on: #03FB8D;
+	--mgs-codec-bar-off: #397975;
 }
 
 :root[data-mgs-codec-theme="deep-blue"] {
 	--mgs-codec-background-color: #030056;
+	--mgs-codec-dialogue-box-color: #ffffff;
 	--mgs-codec-glow-color: #0900ff;
 	--mgs-codec-text-color: #0900ff;
-	--mgs-codec-bolded-text: #0059ff;
+	--mgs-codec-bar-on: #03FB8D;
+	--mgs-codec-bar-off: #397975;
 }
 
 :root[data-mgs-codec-theme="fallout-nuclear"] {
 	--mgs-codec-background-color: #033000;
+	--mgs-codec-dialogue-box-color: #ffffff;
 	--mgs-codec-glow-color: #00ff00;
-	--mgs-codec-text-color: #00ff00;
-	--mgs-codec-bolded-text: #ebff00;
+	--mgs-codec-text-color: #000000;
+	--mgs-codec-bar-on: #03FB8D;
+	--mgs-codec-bar-off: #397975;
 }
 
-#metal-gear-codec .mgs-codec .window-content {
-	background-color: var(--mgs-codec-background-color);
+#metal-gear-codec .window-content {
+	background: transparent;
+	background-color: transparent;
 	color: var(--mgs-codec-text-color);
 	font-family: monospace;
 	padding: 10px;
@@ -47,6 +56,7 @@
 	display: flex;
 	border: 2px solid var(--mgs-codec-glow-color);
 	background-color: var(--mgs-codec-background-color);
+	color: var(--mgs-codec-text-color);
 	padding: 10px;
 	height: 100%;
 	box-shadow: 0 0 10px var(--mgs-codec-glow-color);
@@ -57,13 +67,25 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	height: 100%;
+	/* This should reflect the desired portrait height */
+	max-height: 100%;
+	overflow: hidden;
 }
 
 #metal-gear-codec .portrait img {
+	max-height: 100%;
 	max-width: 100%;
+	object-fit: scale-down;
+	/* Don’t crop or resize forcibly */
+	object-position: center center;
+	height: auto;
+	/* Keep natural height unless too big */
+	width: auto;
 	border: 2px solid var(--mgs-codec-glow-color);
 	background-color: var(--mgs-codec-background-color);
 }
+
 
 #metal-gear-codec .codec-info {
 	flex: 2;
@@ -83,8 +105,30 @@
 
 #metal-gear-codec .dialogue-box {
 	margin-top: 10px;
-	background-color: var(--mgs-codec-background-color);
+	background-color: var(--mgs-codec-dialogue-box-color);
 	border: 1px solid var(--mgs-codec-glow-color);
 	padding: 10px;
 	font-size: 1em;
+}
+
+#metal-gear-codec #receiver-box {
+	height: 150px;
+	width: 300px;
+	background-color: #0F1E17;
+	margin: 10px;
+}
+
+#metal-gear-codec #bars-con {
+	align-items: flex-start;
+	display: flex;
+	justify-content: space-around;
+	height: 100%;
+	flex-direction: column;
+}
+
+#metal-gear-codec .bar {
+	height: 10px;
+	background-color: #397975;
+	/* #03FB8D */
+	width: 100px;
 }
