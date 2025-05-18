@@ -2,16 +2,11 @@ const moduleName = 'metal-gear-codec'
 
 class MGSCodec extends Application {
 
-    constructor(data = {}, options = {}) {
-        super(options);
-        this.rightPortrait = data.actorImage || "modules/metal-gear-codec/images/static.gif";
-    }
-
     // Please help, I don't know how to get some default stuff to stick. I have it down in the ready hook since I can't figure it :D
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             id: moduleName,
-            title: 'Communication Codec',
+            title: 'MGS-Codec',
             resizable: false,
             width: 800,
             height: 350,
@@ -21,10 +16,16 @@ class MGSCodec extends Application {
         });
     }
 
+    // get the selected token(s) for the codec image selection
+    #getSelectedTokensForCodec() {
+        const selectedToken = canvas.tokens.controlled[0];
+        return selectedToken?.actor?.img || "modules/metal-gear-codec/images/static.gif";
+    }
+
     getData() {
         return {
             leftPortrait: "modules/metal-gear-codec/images/static.gif",
-            rightPortrait: this.rightPortrait,
+            rightPortrait: this.#getSelectedTokensForCodec(),
             name: "Solid Snake",
             frequency: frequencyOptions[Math.floor(Math.random() * frequencyOptions.length)],
             text: dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)]
@@ -102,11 +103,11 @@ const frequencyOptions = [
 ]
 
 // toggle the MGSCodec window
-function toggleCodecScreen(data = {}) {
+function toggleCodecScreen() {
     // Ensure an instance exists
     // courtesy of @mxzf from FoundryVTT Discord 
     // JS has a fun little ??= operator, nullish coalescing assignment, which says "if this thing exists, cool; if it doesn't, assign this to it"
-    ui['MGSCodec'] ??= new MGSCodec(data);
+    ui['MGSCodec'] ??= new MGSCodec();
     // If it's already rendered, close it (this doesn't delete it, it simply closes the app)
     if (ui.MGSCodec.rendered) ui.MGSCodec.close();
     // Otherwise, if it's not rendered, render it
@@ -128,25 +129,13 @@ function openCodecForAll() {
         ui.notifications.info(`${moduleName} | Sending Codec to everyone`);
     };
 
-    // get the selected token for the codec screen image
-    const selectedToken = canvas.tokens.controlled[0];
-
-    const dataPayload = {
-        leftPortrait: "modules/metal-gear-codec/images/static.gif",
-        rightPortrait: selectedToken?.actor?.img || "modules/metal-gear-codec/images/static.gif",
-        name: selectedToken?.name || "???",
-        frequency: frequencyOptions[Math.floor(Math.random() * frequencyOptions.length)],
-        text: dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)]
-    };
-
     // socket that sends the 'open' command to the other clients
     game.socket.emit(`module.${moduleName}`, {
-        action: "openCodec",
-        dataPayload
+        action: "openCodec"
     });
 
     // open the codec for the initiator as well
-    toggleCodecScreen(dataPayload);
+    toggleCodecScreen();
 }
 
 Hooks.once("init", () => {
@@ -178,7 +167,7 @@ Hooks.once("ready", () => {
     game.socket.on(`module.${moduleName}`, (payload) => {
         if (payload.action === "openCodec") {
             ui.notifications.info(`${moduleName} | recieving codec transmission`)
-            toggleCodecScreen(payload.data)
+            toggleCodecScreen()
         };
     });
 
