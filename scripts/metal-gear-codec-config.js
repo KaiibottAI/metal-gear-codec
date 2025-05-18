@@ -46,6 +46,14 @@ function applyCodecTheme(theme) {
     document.documentElement.setAttribute('data-mgs-codec-theme', theme);
 };
 
+function openCodecForAll() {
+    ui.notifications.warn(`${moduleName} | Trying to send codec to all`);
+
+    game.socket.emit(`module.${moduleName}`, {
+        action: "openCodec"
+    });
+}
+
 Hooks.once("init", () => {
 
     // Set up all the module settings
@@ -70,6 +78,14 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", () => {
+
+    // sockets
+    game.socket.on(`module.${moduleName}`, (payload) => {
+        ui.notifications.warn(`${moduleName} | recieved socket transmission`);
+        if (payload.action === "openCodec") {
+            new MGSCodec().render(true);
+        }
+    });
 
     // Added these all down here since this is how I could get the settings to be 'retained' upon reloading. I still do not understand it.
     applyCodecTheme(game.settings.get(moduleName, 'codecTheme'));
