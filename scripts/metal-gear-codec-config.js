@@ -40,3 +40,30 @@ function toggleCodecScreen() {
     // Otherwise, if it's not rendered, render it
     else ui.MGSCodec.render(true);
 };
+function applyCodecTheme(theme) {
+    game.settings.set(moduleName, 'codecTheme', theme);
+    document.documentElement.setAttribute('data-mgs-codec-theme', theme);
+};
+
+Hooks.once("init", () => {
+
+    // Set up all the module settings
+    game.settings.register(moduleName, 'codecTheme', {
+        name: 'Codec Theme',
+        hint: 'Collection of pre-made themes for the Codec to have a unique style',
+        scope: 'world',
+        config: true,
+        type: String,
+        choices: {
+            "classic": "Classic",
+            "cyberpunk-red": "CyberpunkRED",
+            "deep-blue": "Deep Blue",
+            "fallout-nuclear": "Fallout Terminal Green"
+        },
+        default: 'classic',
+        onChange: (value) => {
+            applyCodecTheme(value)
+        },
+        requiresReload: false
+    });
+});

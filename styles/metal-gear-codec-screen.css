@@ -1,33 +1,71 @@
-.mgs-codec .window-content {
-	background-color: black;
-	color: #33ff33;
+/* Default settings for the RSS Scroller */
+:root {
+	--mgs-codec-font-family: "Orbitron";
+	--mgs-codec-speed: 100s;
+	--mgs-codec-font-size: 40px;
+	--mgs-codec-width: 800px;
+	--mgs-codec-height: 100px;
+}
+
+/* Different theme colours that seemed fun! */
+:root[data-mgs-codec-theme="classic"] {
+	--mgs-codec-background-color: #000000;
+	--mgs-codec-glow-color: magenta;
+	--mgs-codec-text-color: #ffffff;
+	--mgs-codec-bolded-text: #d05151;
+}
+
+:root[data-mgs-codec-theme="cyberpunk-red"] {
+	--mgs-codec-background-color: #4a0404;
+	--mgs-codec-glow-color: magenta;
+	--mgs-codec-text-color: #d31919;
+	--mgs-codec-bolded-text: #d05151;
+}
+
+:root[data-mgs-codec-theme="deep-blue"] {
+	--mgs-codec-background-color: #030056;
+	--mgs-codec-glow-color: magenta;
+	--mgs-codec-text-color: #0900ff;
+	--mgs-codec-bolded-text: #0059ff;
+}
+
+:root[data-mgs-codec-theme="fallout-nuclear"] {
+	--mgs-codec-background-color: #033000;
+	--mgs-codec-glow-color: magenta;
+	--mgs-codec-text-color: #00ff00;
+	--mgs-codec-bolded-text: #ebff00;
+}
+
+#metal-gear-codec .mgs-codec .window-content {
+	background-color: var(--mgs-codec-background-color);
+	color: var(--mgs-codec-text-color);
 	font-family: monospace;
 	padding: 10px;
 }
 
-.codec-container {
+#metal-gear-codec .codec-container {
 	display: flex;
-	border: 2px solid #33ff33;
+	border: 2px solid var(--mgs-codec-glow-color);
 	background-color: #001100;
 	padding: 10px;
 	height: 100%;
-	box-shadow: 0 0 10px #33ff33;
+	box-shadow: 0 0 10px var(--mgs-codec-glow-color);
 }
 
-.portrait {
+#metal-gear-codec .portrait {
 	flex: 1;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
-.portrait img {
+#metal-gear-codec .portrait img {
 	max-width: 100%;
-	border: 2px solid #33ff33;
+	border: 2px solid var(--mgs-codec-glow-color);
 	background-color: #003300;
 }
 
-.codec-info {
+#metal-gear-codec .codec-info {
 	flex: 2;
 	display: flex;
 	flex-direction: column;
@@ -35,18 +73,18 @@
 	margin: 0 10px;
 }
 
-.name-frequency {
+#metal-gear-codec .name-frequency {
 	display: flex;
 	justify-content: space-between;
-	border-bottom: 1px solid #33ff33;
+	border-bottom: 1px solid var(--mgs-codec-glow-color);
 	font-size: 1.2em;
 	padding-bottom: 5px;
 }
 
-.dialogue-box {
+#metal-gear-codec .dialogue-box {
 	margin-top: 10px;
 	background-color: #002200;
-	border: 1px solid #33ff33;
+	border: 1px solid var(--mgs-codec-glow-color);
 	padding: 10px;
 	font-size: 1em;
 }
