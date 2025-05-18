@@ -41,17 +41,23 @@ function toggleCodecScreen() {
     else ui.MGSCodec.render(true);
 };
 
+// toggle the codec window open/closed
 function applyCodecTheme(theme) {
     game.settings.set(moduleName, 'codecTheme', theme);
     document.documentElement.setAttribute('data-mgs-codec-theme', theme);
 };
 
+// socket to open the codec screen for everyone
 function openCodecForAll() {
     ui.notifications.warn(`${moduleName} | Trying to send codec to all`);
 
+    // socket that sends the 'open' command to the other clients
     game.socket.emit(`module.${moduleName}`, {
         action: "openCodec"
     });
+
+    // open the codec for the initiator as well
+    toggleCodecScreen();
 }
 
 Hooks.once("init", () => {
@@ -83,7 +89,7 @@ Hooks.once("ready", () => {
     game.socket.on(`module.${moduleName}`, (payload) => {
         ui.notifications.warn(`${moduleName} | recieved socket transmission`);
         if (payload.action === "openCodec") {
-            new MGSCodec().render(true);
+            toggleCodecScreen()
         }
     });
 
