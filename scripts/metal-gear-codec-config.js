@@ -131,20 +131,22 @@ function openCodecForAll() {
     // get the selected token for the codec screen image
     const selectedToken = canvas.tokens.controlled[0];
 
+    const dataPayload = {
+        leftPortrait: "modules/metal-gear-codec/images/static.gif",
+        rightPortrait: selectedToken?.actor?.img || "modules/metal-gear-codec/images/static.gif",
+        name: selectedToken?.name || "???",
+        frequency: frequencyOptions[Math.floor(Math.random() * frequencyOptions.length)],
+        text: dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)]
+    };
+
     // socket that sends the 'open' command to the other clients
     game.socket.emit(`module.${moduleName}`, {
         action: "openCodec",
-        data: {
-            leftPortrait: "modules/metal-gear-codec/images/static.gif",
-            rightPortrait: selectedToken?.actor?.img || "modules/metal-gear-codec/images/static.gif",
-            name: selectedToken?.name || "???",
-            frequency: frequencyOptions[Math.floor(Math.random() * frequencyOptions.length)],
-            text: dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)]
-        }
+        dataPayload
     });
 
     // open the codec for the initiator as well
-    toggleCodecScreen(data);
+    toggleCodecScreen(dataPayload);
 }
 
 Hooks.once("init", () => {
@@ -176,7 +178,7 @@ Hooks.once("ready", () => {
     game.socket.on(`module.${moduleName}`, (payload) => {
         if (payload.action === "openCodec") {
             ui.notifications.info(`${moduleName} | recieving codec transmission`)
-            toggleCodecScreen()
+            toggleCodecScreen(payload.data)
         };
     });
 
