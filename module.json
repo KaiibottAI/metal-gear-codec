@@ -1,0 +1,31 @@
+{
+    "id": "metal-gear-codec",
+    "title": "Metal Gear Codec",
+    "version": "1.0.0",
+    "compatibility": {
+        "minimum": "11",
+        "verified": "11"
+    },
+    "description": "A cinematic communication module that mimics the classic style of Metal Gear Solid Codec screen for rich Role Play antics.",
+    "authors": [
+        {
+            "name": "Kaiibott",
+            "discord": "kaiibott",
+            "flags": {}
+        }
+    ],
+    "url": "https://github.com/KaiibottAI/metal-gear-codec",
+    "packs": [
+        {
+            "name": "codec-screen-macro",
+            "label": "Codec Screen Macro",
+            "path": "packs/codec-screen-macro",
+            "type": "Macro",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        }
+    ]
+}
