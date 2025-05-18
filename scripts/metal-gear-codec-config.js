@@ -27,3 +27,16 @@ class MGSCodec extends Application {
     }
 
 };
+
+
+// open/close the MGSCodec window
+function toggleCodecScreen() {
+    // Ensure an instance exists
+    // courtesy of @mxzf from FoundryVTT Discord 
+    // JS has a fun little ??= operator, nullish coalescing assignment, which says "if this thing exists, cool; if it doesn't, assign this to it"
+    ui['MGSCodec'] ??= new MGSCodec();
+    // If it's already rendered, close it (this doesn't delete it, it simply closes the app)
+    if (ui.MGSCodec.rendered) ui.MGSCodec.close();
+    // Otherwise, if it's not rendered, render it
+    else ui.MGSCodec.render(true);
+};
