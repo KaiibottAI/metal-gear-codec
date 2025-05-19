@@ -1,4 +1,4 @@
-const moduleName = 'metal-gear-codec'
+const moduleName = 'metal-gear-codec';
 
 class MGSCodec extends Application {
 
@@ -7,12 +7,17 @@ class MGSCodec extends Application {
         this._setData(data);
     }
 
-    _setData(data) {
-        this.leftPortrait = "modules/metal-gear-codec/images/static.gif"; // "modules/metal-gear-codec/images/snake.jpg" //"modules/metal-gear-codec/images/static.gif";
-        this.leftName = "???"; //data?.name || "???";
-        this.rightPortrait = data?.img || "modules/metal-gear-codec/images/static.gif";
-        this.rightName = data?.name || "???";
-        this.name = data?.name || 'Snaaaaake (you should not see this, blame the dev)';
+    _setData({ leftId = null, rightId = null } = {}) {
+        const leftActor = leftId ? game.actors.get(leftId) : null;
+        const rightActor = rightId ? game.actors.get(rightId) : null;
+
+        this.leftPortrait = leftActor?.img || "modules/metal-gear-codec/images/static.gif";
+        this.leftName = leftActor?.name || "???";
+
+        this.rightPortrait = rightActor?.img || "modules/metal-gear-codec/images/static.gif";
+        this.rightName = rightActor?.name || "???";
+
+        this.name = leftActor?.name || rightActor?.name || '???';
         this.frequency = frequencyOptions[Math.floor(Math.random() * frequencyOptions.length)];
         this.text = dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)];
     }
@@ -32,11 +37,10 @@ class MGSCodec extends Application {
     updateData(data) {
         this._setData(data);
         if (this.rendered) {
-            this.render(true, { focus: false }); // re-render with new context
+            this.render(true, { focus: false });
         }
     }
 
-    // Please help, I don't know how to get some default stuff to stick. I have it down in the ready hook since I can't figure it :D
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             id: moduleName,
@@ -95,10 +99,9 @@ class MGSCodec extends Application {
         }
 
         barSignal();
-        $barWidth.eq(0).css('display', 'none'); // optional
+        $barWidth.eq(0).css('display', 'none');
     }
-
-};
+}
 
 // array of strings that go in the middle of the codec
 const dialogueOptions = [
@@ -140,7 +143,7 @@ const dialogueOptions = [
     'COMM TUNNEL STABILIZED',
     'SECURE PORT ENGAGED',
     'CHANNEL OMEGA ONLINE'
-]
+];
 
 // frequency number choices for fun
 const frequencyOptions = [
@@ -151,62 +154,50 @@ const frequencyOptions = [
     "123.45",
     "89.98",
     "199.7"
-]
+];
 
-// toggle the MGSCodec window
-function toggleCodecScreen(tokenUUID) {
+// Show or toggle the Codec screen using one or two actor IDs
+function _showCodecForIds(actorIds = []) {
+    // handles which side the images go to
+    const data = actorIds.length === 1
+        ? { leftId: null, rightId: actorIds[0] }
+        : { leftId: actorIds[0] || null, rightId: actorIds[1] || null };
 
-    const foundToken = game.actors.get(tokenUUID);
 
-    // Ensure an instance exists
-    // courtesy of @mxzf from FoundryVTT Discord 
-    // JS has a fun little ??= operator, nullish coalescing assignment, which says "if this thing exists, cool; if it doesn't, assign this to it"
-    ui['MGSCodec'] ??= new MGSCodec(foundToken);
-    // If it's already rendered, close it (this doesn't delete it, it simply closes the app)
-    // ui.MGSCodec.updateData(foundToken)
+    ui['MGSCodec'] ??= new MGSCodec(data);
 
     if (ui.MGSCodec.rendered) {
         ui.notifications.info(`${moduleName} | Ending Transmission`);
-        ui.MGSCodec.close();
+        return ui.MGSCodec.close();
     }
-    else {
-        // Otherwise, if it's not rendered, render it
-        ui.notifications.info(`${moduleName} | Recieving Transmission`);
-        ui.MGSCodec.updateData(foundToken)
-        ui.MGSCodec.render(true);
-    };
-};
 
-// toggle the codec window open/closed
+    ui.notifications.info(`${moduleName} | Receiving Transmission`);
+    ui.MGSCodec.updateData(data);
+    ui.MGSCodec.render(true);
+}
+
+// Called by GM to open codec window for all users
+function openCodecForAll() {
+    if (game.user !== game.users.activeGM) {
+        return ui.notifications.warn(`${moduleName} | Only the GM can open the codec for everyone`);
+    }
+
+    const controlled = canvas.tokens.controlled.slice(0, 2);
+    const actorIds = controlled.map(t => t.actor.id);
+
+    game.socket.emit(`module.${moduleName}`, {
+        action: "openCodec",
+        data: { actorIds }
+    });
+
+    _showCodecForIds(actorIds);
+}
+
+// Apply the selected theme
 function applyCodecTheme(theme) {
     game.settings.set(moduleName, 'codecTheme', theme);
     document.documentElement.setAttribute('data-mgs-codec-theme', theme);
-};
-
-// socket to open the codec screen for everyone
-function openCodecForAll() {
-
-    if (game.user !== game.users.activeGM) {
-        ui.notifications.warn(`${moduleName} | Only the GM can open the codec for everyone`)
-        return;
-    }
-
-    // Get Selected token
-    const selectedToken = canvas.tokens.controlled[0];
-
-    // ui.notifications.warn(`${moduleName} | working token uuid of ${tokenForCodecScreen?.actor._id}`)
-
-    // socket that sends the 'open' command to the other clients
-    game.socket.emit(`module.${moduleName}`, {
-        action: "openCodec",
-        data: {
-            token: selectedToken?.actor._id
-        }
-    });
-
-    // open the codec for the initiator as well
-    toggleCodecScreen(selectedToken?.actor._id);
-};
+}
 
 Hooks.once("init", () => {
 
@@ -225,24 +216,19 @@ Hooks.once("init", () => {
         },
         default: 'classic',
         onChange: (value) => {
-            applyCodecTheme(value)
+            applyCodecTheme(value);
         },
         requiresReload: false
     });
 });
 
 Hooks.once("ready", () => {
-
-    // sockets
     game.socket.on(`module.${moduleName}`, (payload) => {
         if (payload.action === "openCodec") {
-            // ui.notifications.info(`${moduleName} | Recieving Transmission`);
-            // ui.notifications.warn(`${moduleName} | Working token uuid of ${payload.data.token}`);
-            toggleCodecScreen(payload.data.token);
-        };
+            const { actorIds } = payload.data;
+            _showCodecForIds(actorIds);
+        }
     });
 
-    // Added these all down here since this is how I could get the settings to be 'retained' upon reloading. I still do not understand it.
     applyCodecTheme(game.settings.get(moduleName, 'codecTheme'));
-
 });
