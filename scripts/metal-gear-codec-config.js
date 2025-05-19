@@ -4,11 +4,11 @@ class MGSCodec extends Application {
 
     constructor(data = {}, options = {}) {
         super(options);
-        this.leftPortrait = data.leftPortrait || "modules/metal-gear-codec/images/static.gif";
-        this.rightPortrait = data.img || "modules/metal-gear-codec/images/static.gif";
-        this.name = data.name || 'Snaaaaake';
-        this.frequency = data.frequency || frequencyOptions[Math.floor(Math.random() * frequencyOptions.length)];
-        this.text = data.text || dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)];
+        this.leftPortrait = "modules/metal-gear-codec/images/static.gif";
+        this.rightPortrait = data?.img || "modules/metal-gear-codec/images/static.gif";
+        this.name = data?.name || 'Snaaaaake (you should not see this)';
+        this.frequency = frequencyOptions[Math.floor(Math.random() * frequencyOptions.length)];
+        this.text = dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)];
     }
 
     // Please help, I don't know how to get some default stuff to stick. I have it down in the ready hook since I can't figure it :D
@@ -24,12 +24,6 @@ class MGSCodec extends Application {
             classes: ["metal-gear-codec"]
         });
     }
-
-    // // get the selected token(s) for the codec image selection
-    // #getSelectedTokensForCodec() {
-    //     const selectedToken = canvas.tokens.controlled[0];
-    //     return selectedToken;
-    // }
 
     getData() {
         return {
@@ -112,18 +106,24 @@ const frequencyOptions = [
 ]
 
 // toggle the MGSCodec window
-function toggleCodecScreen(data) {
+function toggleCodecScreen(tokenUUID) {
 
-    let foundToken = game.actors.get(data);
+    // ui.notifications.warn(`${moduleName} | Searching token with UUID ${tokenUUID}`)
+    const foundToken = game.actors.get(tokenUUID);
+    // ui.notifications.warn(`${moduleName} | found token ${foundToken.name}`)
 
     // Ensure an instance exists
     // courtesy of @mxzf from FoundryVTT Discord 
     // JS has a fun little ??= operator, nullish coalescing assignment, which says "if this thing exists, cool; if it doesn't, assign this to it"
     ui['MGSCodec'] ??= new MGSCodec(foundToken);
     // If it's already rendered, close it (this doesn't delete it, it simply closes the app)
-    if (ui.MGSCodec.rendered) ui.MGSCodec.close();
-    // Otherwise, if it's not rendered, render it
-    else ui.MGSCodec.render(true);
+    if (ui.MGSCodec.rendered) {
+        ui.MGSCodec.close();
+    }
+    else {
+        // Otherwise, if it's not rendered, render it
+        ui.MGSCodec.render(true);
+    };
 };
 
 // toggle the codec window open/closed
@@ -193,8 +193,8 @@ Hooks.once("ready", () => {
     game.socket.on(`module.${moduleName}`, (payload) => {
         if (payload.action === "openCodec") {
             ui.notifications.info(`${moduleName} | recieving codec transmission`);
-            // ui.notifications.info(`${moduleName} | working token uuid of ${payload.data.token}`);
-            toggleCodecScreen(payload.data);
+            // ui.notifications.warn(`${moduleName} | working token uuid of ${payload.data.token}`);
+            toggleCodecScreen(payload.data.token);
         };
     });
 
