@@ -37,5 +37,7 @@
     ],
     "styles": [
         "styles/metal-gear-codec-screen.css"
-    ]
+    ],
+    "manifest": "https://raw.githubusercontent.com/KaiibottAI/metal-gear-codec/main/module.json",
+    "download": "https://github.com/KaiibottAI/metal-gear-codec/releases/download/1.0.0/metal-gear-codec.zip"
 }
