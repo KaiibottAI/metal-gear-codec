@@ -22,8 +22,8 @@
 	--mgs-codec-dialogue-box-color: #ffffff;
 	--mgs-codec-glow-color: #d31919;
 	--mgs-codec-text-color: #d31919;
-	--mgs-codec-bar-on: #03FB8D;
-	--mgs-codec-bar-off: #397975;
+	--mgs-codec-bar-on: #a81414;
+	--mgs-codec-bar-off: #540a0a;
 }
 
 :root[data-mgs-codec-theme="deep-blue"] {
@@ -31,17 +31,17 @@
 	--mgs-codec-dialogue-box-color: #ffffff;
 	--mgs-codec-glow-color: #0900ff;
 	--mgs-codec-text-color: #0900ff;
-	--mgs-codec-bar-on: #03FB8D;
-	--mgs-codec-bar-off: #397975;
+	--mgs-codec-bar-on: #0800e5;
+	--mgs-codec-bar-off: #04007f;
 }
 
 :root[data-mgs-codec-theme="fallout-nuclear"] {
 	--mgs-codec-background-color: #033000;
 	--mgs-codec-dialogue-box-color: #ffffff;
 	--mgs-codec-glow-color: #00ff00;
-	--mgs-codec-text-color: #000000;
-	--mgs-codec-bar-on: #03FB8D;
-	--mgs-codec-bar-off: #397975;
+	--mgs-codec-text-color: #00ff00;
+	--mgs-codec-bar-on: #00e500;
+	--mgs-codec-bar-off: #006600;
 }
 
 #metal-gear-codec .window-content {
@@ -62,29 +62,42 @@
 	box-shadow: 0 0 10px var(--mgs-codec-glow-color);
 }
 
-#metal-gear-codec .portrait {
+#metal-gear-codec .portrait-container {
 	flex: 1;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-start;
 	height: 100%;
-	/* This should reflect the desired portrait height */
-	max-height: 100%;
+	/* assumes parent defines a height */
 	overflow: hidden;
+	padding: 0.5rem;
+	/* optional spacing */
+	box-sizing: border-box;
 }
 
-#metal-gear-codec .portrait img {
-	max-height: 100%;
+#metal-gear-codec .portrait-container .portrait-name {
+	text-align: center;
+	font-size: 0.9rem;
+	margin-bottom: 0.5rem;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
 	max-width: 100%;
-	object-fit: scale-down;
-	/* Don’t crop or resize forcibly */
-	object-position: center center;
+	color: var(--mgs-codec-glow-color);
+}
+
+#metal-gear-codec .portrait-container img {
+	flex-grow: 1;
+	max-height: 90%;
+	max-width: 100%;
 	height: auto;
-	/* Keep natural height unless too big */
 	width: auto;
+	object-fit: contain;
 	border: 2px solid var(--mgs-codec-glow-color);
 	background-color: var(--mgs-codec-background-color);
 }
+
 
 
 #metal-gear-codec .codec-info {
@@ -115,7 +128,7 @@
 #metal-gear-codec #receiver-box {
 	height: 150px;
 	width: 300px;
-	background-color: #0F1E17;
+	background-color: var(--mgs-codec-background-color);
 	margin: 10px;
 }
 
@@ -129,7 +142,7 @@
 
 #metal-gear-codec .bar {
 	height: 10px;
-	background-color: #397975;
+	background-color: var(--mgs-codec-bar-off);
 	/* #03FB8D */
 	width: 100px;
 }

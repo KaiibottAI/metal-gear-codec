@@ -8,7 +8,7 @@ class MGSCodec extends Application {
     }
 
     _setData(data) {
-        this.leftPortrait = "modules/metal-gear-codec/images/static.gif";
+        this.leftPortrait = "modules/metal-gear-codec/images/snake.jpg" //"modules/metal-gear-codec/images/static.gif";
         this.rightPortrait = data?.img || "modules/metal-gear-codec/images/static.gif";
         this.name = data?.name || 'Snaaaaake (you should not see this, blame the dev)';
         this.frequency = frequencyOptions[Math.floor(Math.random() * frequencyOptions.length)];
