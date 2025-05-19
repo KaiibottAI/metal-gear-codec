@@ -2,15 +2,6 @@ const moduleName = 'metal-gear-codec'
 
 class MGSCodec extends Application {
 
-    // constructor(data = {}, options = {}) {
-    //     super(options);
-    //     this.leftPortrait = "modules/metal-gear-codec/images/static.gif";
-    //     this.rightPortrait = data?.img || "modules/metal-gear-codec/images/static.gif";
-    //     this.name = data?.name || 'Snaaaaake (you should not see this)';
-    //     this.frequency = frequencyOptions[Math.floor(Math.random() * frequencyOptions.length)];
-    //     this.text = dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)];
-    // }
-
     constructor(data = {}, options = {}) {
         super(options);
         this._setData(data);
@@ -138,12 +129,12 @@ function toggleCodecScreen(tokenUUID) {
     // ui.MGSCodec.updateData(foundToken)
 
     if (ui.MGSCodec.rendered) {
-        ui.notifications.info(`${moduleName} | ending codec transmission`);
+        ui.notifications.info(`${moduleName} | Ending codec transmission`);
         ui.MGSCodec.close();
     }
     else {
         // Otherwise, if it's not rendered, render it
-        ui.notifications.info(`${moduleName} | recieving codec transmission`);
+        ui.notifications.info(`${moduleName} | Recieving codec transmission`);
         ui.MGSCodec.updateData(foundToken)
         ui.MGSCodec.render(true);
     };
@@ -161,7 +152,7 @@ function openCodecForAll() {
     if (game.user !== game.users.activeGM) {
         ui.notifications.warn(`${moduleName} | Only the GM can open the codec for everyone`)
         return;
-    } 
+    }
     // else {
     //     ui.notifications.info(`${moduleName} | Sending Codec to everyone`);
     // };
@@ -216,8 +207,8 @@ Hooks.once("ready", () => {
     // sockets
     game.socket.on(`module.${moduleName}`, (payload) => {
         if (payload.action === "openCodec") {
-            // ui.notifications.info(`${moduleName} | recieving codec transmission`);
-            // ui.notifications.warn(`${moduleName} | working token uuid of ${payload.data.token}`);
+            // ui.notifications.info(`${moduleName} | Recieving codec transmission`);
+            // ui.notifications.warn(`${moduleName} | Working token uuid of ${payload.data.token}`);
             toggleCodecScreen(payload.data.token);
         };
     });
