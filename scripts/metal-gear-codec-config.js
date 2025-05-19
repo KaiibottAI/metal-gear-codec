@@ -1,4 +1,4 @@
-const moduleName = 'metal-gear-codec';
+const moduleMGSCodecName = 'metal-gear-codec';
 
 class MGSCodec extends Application {
 
@@ -43,13 +43,13 @@ class MGSCodec extends Application {
 
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
-            id: moduleName,
+            id: moduleMGSCodecName,
             title: 'INCOMING COMMUNICATION',
             resizable: false,
             width: 800,
             height: 350,
             fontsize: 16,
-            template: `modules/${moduleName}/templates/metal-gear-codec-screen.html`,
+            template: `modules/${moduleMGSCodecName}/templates/metal-gear-codec-screen.html`,
             classes: ["metal-gear-codec"]
         });
     }
@@ -167,11 +167,11 @@ function _showCodecForIds(actorIds = []) {
     ui['MGSCodec'] ??= new MGSCodec(data);
 
     if (ui.MGSCodec.rendered) {
-        ui.notifications.info(`${moduleName} | Ending Transmission`);
+        ui.notifications.info(`${moduleMGSCodecName} | Ending Transmission`);
         return ui.MGSCodec.close();
     }
 
-    ui.notifications.info(`${moduleName} | Receiving Transmission`);
+    ui.notifications.info(`${moduleMGSCodecName} | Receiving Transmission`);
     ui.MGSCodec.updateData(data);
     ui.MGSCodec.render(true);
 }
@@ -179,13 +179,13 @@ function _showCodecForIds(actorIds = []) {
 // Called by GM to open codec window for all users
 function openCodecForAll() {
     if (game.user !== game.users.activeGM) {
-        return ui.notifications.warn(`${moduleName} | Only the GM can open the codec for everyone`);
+        return ui.notifications.warn(`${moduleMGSCodecName} | Only the GM can open the codec for everyone`);
     }
 
     const controlled = canvas.tokens.controlled.slice(0, 2);
     const actorIds = controlled.map(t => t.actor.id);
 
-    game.socket.emit(`module.${moduleName}`, {
+    game.socket.emit(`module.${moduleMGSCodecName}`, {
         action: "openCodec",
         data: { actorIds }
     });
@@ -195,14 +195,14 @@ function openCodecForAll() {
 
 // Apply the selected theme
 function applyCodecTheme(theme) {
-    game.settings.set(moduleName, 'codecTheme', theme);
+    game.settings.set(moduleMGSCodecName, 'codecTheme', theme);
     document.documentElement.setAttribute('data-mgs-codec-theme', theme);
 }
 
 Hooks.once("init", () => {
 
     // Set up all the module settings
-    game.settings.register(moduleName, 'codecTheme', {
+    game.settings.register(moduleMGSCodecName, 'codecTheme', {
         name: 'Codec Theme',
         hint: 'Collection of pre-made themes for the Codec to have a unique style',
         scope: 'world',
@@ -223,12 +223,12 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", () => {
-    game.socket.on(`module.${moduleName}`, (payload) => {
+    game.socket.on(`module.${moduleMGSCodecName}`, (payload) => {
         if (payload.action === "openCodec") {
             const { actorIds } = payload.data;
             _showCodecForIds(actorIds);
         }
     });
 
-    applyCodecTheme(game.settings.get(moduleName, 'codecTheme'));
+    applyCodecTheme(game.settings.get(moduleMGSCodecName, 'codecTheme'));
 });
