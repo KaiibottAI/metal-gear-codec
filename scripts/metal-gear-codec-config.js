@@ -192,12 +192,7 @@ function openCodecForAll() {
     }
 
     // Get Selected token
-    function getSelectedTokensForCodec() {
-        const selectedToken = canvas.tokens.controlled[0];
-        return selectedToken;
-    };
-
-    const tokenForCodecScreen = getSelectedTokensForCodec()
+    const selectedToken = canvas.tokens.controlled[0];
 
     // ui.notifications.warn(`${moduleName} | working token uuid of ${tokenForCodecScreen?.actor._id}`)
 
@@ -205,12 +200,12 @@ function openCodecForAll() {
     game.socket.emit(`module.${moduleName}`, {
         action: "openCodec",
         data: {
-            token: tokenForCodecScreen?.actor._id
+            token: selectedToken?.actor._id
         }
     });
 
     // open the codec for the initiator as well
-    toggleCodecScreen(tokenForCodecScreen?.actor._id);
+    toggleCodecScreen(selectedToken?.actor._id);
 };
 
 Hooks.once("init", () => {
