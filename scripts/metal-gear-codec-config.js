@@ -199,6 +199,10 @@ function applyCodecTheme(theme) {
     document.documentElement.setAttribute('data-mgs-codec-theme', theme);
 }
 
+function updateCodecFont(selectedFont) {
+    document.documentElement?.style.setProperty("--mgs-codec-font-family", `"${selectedFont}"`);
+};
+
 Hooks.once("init", () => {
 
     // Set up all the module settings
@@ -228,6 +232,22 @@ Hooks.once("ready", () => {
             const { actorIds } = payload.data;
             _showCodecForIds(actorIds);
         }
+    });
+
+    // This has to load later since Foundry loads fonts at a different time that is past `init` :(
+    game.settings.register(moduleMGSCodecName, 'CodecFont', {
+        name: "Codec Font",
+        hint: "Select the font for the Codec Communicaiton. Supports Custom Fonts if uploaded to Foundry Font Settings.",
+        scope: "client",
+        config: true,
+        type: String,
+        choices: Object.fromEntries(Object.keys(FontConfig.getAvailableFontChoices()).map(f => [f, f])), // Get all fonts that are available for edit in Foundry, including custom upload
+        default: "Orbitron",
+        onChange: (value) => {
+            updateCodecFont(value);
+            game.settings.set(moduleMGSCodecName, 'CodecFont', value);
+        },
+        requiresReload: false
     });
 
     applyCodecTheme(game.settings.get(moduleMGSCodecName, 'codecTheme'));

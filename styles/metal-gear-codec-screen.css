@@ -1,10 +1,6 @@
 /* Default settings for the RSS Scroller */
 :root {
 	--mgs-codec-font-family: "Orbitron";
-	--mgs-codec-speed: 100s;
-	--mgs-codec-font-size: 40px;
-	--mgs-codec-width: 800px;
-	--mgs-codec-height: 100px;
 }
 
 /* Different theme colours that seemed fun! */
