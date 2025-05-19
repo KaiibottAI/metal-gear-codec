@@ -48,7 +48,7 @@
 	background: transparent;
 	background-color: transparent;
 	color: var(--mgs-codec-text-color);
-	font-family: monospace;
+	font-family: var(--mgs-codec-font-family);
 	padding: 10px;
 }
 
@@ -107,6 +107,7 @@
 	margin-top: 10px;
 	background-color: var(--mgs-codec-dialogue-box-color);
 	border: 1px solid var(--mgs-codec-glow-color);
+	text-align: center;
 	padding: 10px;
 	font-size: 1em;
 }

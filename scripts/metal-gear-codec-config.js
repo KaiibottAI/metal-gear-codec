@@ -10,7 +10,7 @@ class MGSCodec extends Application {
     _setData(data) {
         this.leftPortrait = "modules/metal-gear-codec/images/static.gif";
         this.rightPortrait = data?.img || "modules/metal-gear-codec/images/static.gif";
-        this.name = data?.name || 'Snaaaaake (you should not see this)';
+        this.name = data?.name || 'Snaaaaake (you should not see this, blame the dev)';
         this.frequency = frequencyOptions[Math.floor(Math.random() * frequencyOptions.length)];
         this.text = dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)];
     }
@@ -98,12 +98,45 @@ class MGSCodec extends Application {
 
 // array of strings that go in the middle of the codec
 const dialogueOptions = [
-    "Mission briefing: secure the perimeter and await further instructions.",
-    "Greetings, operative. Your target is a high-value asset inside the facility.",
-    "Status report: all units are in position. Proceed on my mark.",
-    "Alert: enemy patrols have increased in sector 7. Stay sharp.",
-    "Welcome back, agent. We've intercepted new intel—check your comms."
-];
+    'DATA SYNC IN PROGRESS',
+    'PACKET DELIVERY CONFIRMED',
+    'ENCRYPTED PAYLOAD DEPLOYED',
+    'FILE TRANSFER COMPLETE',
+    'MEMORY CORES LINKED',
+    'SYNCING DATA MODULES',
+    'ARCHIVE ACCESSED',
+    'FILE SYSTEM ONLINE',
+    'DATA STREAM INTEGRATED',
+    'INFORMATION LINK STABLE',
+    'COMMUNICATIONS ONLINE',
+    'TRANSMISSION IN PROGRESS',
+    'SIGNAL BROADCASTING',
+    'RECEIVING UPLINK',
+    'MESSAGE RECEIVED',
+    'DATA STREAM ACTIVE',
+    'AUDIO FEED LINKED',
+    'LIVE FEED ENGAGED',
+    'UPLINK CONFIRMED',
+    'OPENING CHANNEL',
+    'BEACON EMITTING',
+    'TRANSMISSION COMPLETE',
+    'REPLY SIGNAL RECEIVED',
+    'SECURE CHANNEL CONNECTING',
+    'SECURE LINK ESTABLISHED',
+    'TRANSMISSION LINKED',
+    'ENCRYPTED LINK ACTIVE',
+    'HANDSHAKE COMPLETE',
+    'SIGNAL ACQUIRED',
+    'AUTHENTICATION ACCEPTED',
+    'PROTOCOL SYNCHRONIZED',
+    'CYBERLINK INITIATED',
+    'CONNECTION ENCRYPTED',
+    'FREQUENCY LOCKED',
+    'ENCRYPTION VERIFIED',
+    'COMM TUNNEL STABILIZED',
+    'SECURE PORT ENGAGED',
+    'CHANNEL OMEGA ONLINE'
+]
 
 // frequency number choices for fun
 const frequencyOptions = [
