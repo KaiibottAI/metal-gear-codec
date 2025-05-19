@@ -8,8 +8,10 @@ class MGSCodec extends Application {
     }
 
     _setData(data) {
-        this.leftPortrait = "modules/metal-gear-codec/images/snake.jpg" //"modules/metal-gear-codec/images/static.gif";
+        this.leftPortrait = "modules/metal-gear-codec/images/static.gif"; // "modules/metal-gear-codec/images/snake.jpg" //"modules/metal-gear-codec/images/static.gif";
+        this.leftName = "???"; //data?.name || "???";
         this.rightPortrait = data?.img || "modules/metal-gear-codec/images/static.gif";
+        this.rightName = data?.name || "???";
         this.name = data?.name || 'Snaaaaake (you should not see this, blame the dev)';
         this.frequency = frequencyOptions[Math.floor(Math.random() * frequencyOptions.length)];
         this.text = dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)];
@@ -18,7 +20,9 @@ class MGSCodec extends Application {
     getData() {
         return {
             leftPortrait: this.leftPortrait,
+            leftName: this.leftName,
             rightPortrait: this.rightPortrait,
+            rightName: this.rightName,
             name: this.name,
             frequency: this.frequency,
             text: this.text
@@ -36,7 +40,7 @@ class MGSCodec extends Application {
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             id: moduleName,
-            title: 'MGS-Codec',
+            title: 'INCOMING COMMUNICATION',
             resizable: false,
             width: 800,
             height: 350,
@@ -162,12 +166,12 @@ function toggleCodecScreen(tokenUUID) {
     // ui.MGSCodec.updateData(foundToken)
 
     if (ui.MGSCodec.rendered) {
-        ui.notifications.info(`${moduleName} | Ending codec transmission`);
+        ui.notifications.info(`${moduleName} | Ending Transmission`);
         ui.MGSCodec.close();
     }
     else {
         // Otherwise, if it's not rendered, render it
-        ui.notifications.info(`${moduleName} | Recieving codec transmission`);
+        ui.notifications.info(`${moduleName} | Recieving Transmission`);
         ui.MGSCodec.updateData(foundToken)
         ui.MGSCodec.render(true);
     };
@@ -186,9 +190,6 @@ function openCodecForAll() {
         ui.notifications.warn(`${moduleName} | Only the GM can open the codec for everyone`)
         return;
     }
-    // else {
-    //     ui.notifications.info(`${moduleName} | Sending Codec to everyone`);
-    // };
 
     // Get Selected token
     function getSelectedTokensForCodec() {
@@ -240,7 +241,7 @@ Hooks.once("ready", () => {
     // sockets
     game.socket.on(`module.${moduleName}`, (payload) => {
         if (payload.action === "openCodec") {
-            // ui.notifications.info(`${moduleName} | Recieving codec transmission`);
+            // ui.notifications.info(`${moduleName} | Recieving Transmission`);
             // ui.notifications.warn(`${moduleName} | Working token uuid of ${payload.data.token}`);
             toggleCodecScreen(payload.data.token);
         };
