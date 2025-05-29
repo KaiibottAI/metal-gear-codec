@@ -177,7 +177,7 @@ function openCodecForAll() {
     _showCodecForIds(actorIds);
 }
 
-// Enhanced version: open Codec UI for everyone with optional arguments and a close callback
+// Enhanced version: open Codec UI for everyone with optional arguments
 async function openCodecForAllEnhanced({ firstToken, secondToken } = {}) {
     if (game.user !== game.users.activeGM) {
         return ui.notifications.warn(`${moduleMGSCodecName} | Only the GM can open the codec for everyone`);
