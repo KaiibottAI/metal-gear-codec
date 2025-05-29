@@ -1,25 +1,8 @@
-2025/05/19-12:29:07.796 2a860 Recovering log #105
-2025/05/19-12:29:07.796 2a860 Recovering log #107
-2025/05/19-12:29:07.796 2a860 Level-0 table #107: started
-2025/05/19-12:29:07.798 2a860 Level-0 table #107: 605 bytes OK
-2025/05/19-12:29:07.802 2a860 Delete type=0 #105
-2025/05/19-12:29:07.802 2a860 Delete type=0 #107
-2025/05/19-12:29:07.802 2a860 Delete type=3 #104
-2025/05/19-12:30:10.705 2c794 Level-0 table #110: started
-2025/05/19-12:30:10.705 2c794 Level-0 table #110: 0 bytes OK
-2025/05/19-12:30:10.707 2c794 Delete type=0 #108
-2025/05/19-12:30:10.707 2c794 Manual compaction at level-0 from '!macros!eaGivmWKL1mBFndB' @ 72057594037927935 : 1 .. '!macros!eaGivmWKL1mBFndB' @ 0 : 0; will stop at '!macros!eaGivmWKL1mBFndB' @ 4 : 1
-2025/05/19-12:30:10.707 2c794 Compacting 1@0 + 0@1 files
-2025/05/19-12:30:10.710 2c794 Generated table #111@0: 1 keys, 605 bytes
-2025/05/19-12:30:10.710 2c794 Compacted 1@0 + 0@1 files => 605 bytes
-2025/05/19-12:30:10.711 2c794 compacted to: files[ 0 1 1 0 0 0 0 ]
-2025/05/19-12:30:10.711 2c794 Delete type=2 #107
-2025/05/19-12:30:10.714 2c794 Manual compaction at level-0 from '!macros!eaGivmWKL1mBFndB' @ 4 : 1 .. '!macros!eaGivmWKL1mBFndB' @ 0 : 0; will stop at (end)
-2025/05/19-12:30:10.718 2c794 Manual compaction at level-1 from '!macros!eaGivmWKL1mBFndB' @ 72057594037927935 : 1 .. '!macros!eaGivmWKL1mBFndB' @ 0 : 0; will stop at '!macros!eaGivmWKL1mBFndB' @ 4 : 1
-2025/05/19-12:30:10.718 2c794 Compacting 1@1 + 1@2 files
-2025/05/19-12:30:10.721 2c794 Generated table #112@1: 1 keys, 605 bytes
-2025/05/19-12:30:10.721 2c794 Compacted 1@1 + 1@2 files => 605 bytes
-2025/05/19-12:30:10.722 2c794 compacted to: files[ 0 0 1 0 0 0 0 ]
-2025/05/19-12:30:10.722 2c794 Delete type=2 #103
-2025/05/19-12:30:10.722 2c794 Delete type=2 #111
-2025/05/19-12:30:10.725 2c794 Manual compaction at level-1 from '!macros!eaGivmWKL1mBFndB' @ 4 : 1 .. '!macros!eaGivmWKL1mBFndB' @ 0 : 0; will stop at (end)
+2025/05/29-18:05:46.913 2034c Recovering log #125
+2025/05/29-18:05:46.920 2034c Delete type=0 #125
+2025/05/29-18:05:46.921 2034c Delete type=3 #123
+2025/05/29-18:15:41.129 21ff4 Level-0 table #130: started
+2025/05/29-18:15:41.130 21ff4 Level-0 table #130: 0 bytes OK
+2025/05/29-18:15:41.134 21ff4 Delete type=0 #128
+2025/05/29-18:15:41.135 21ff4 Manual compaction at level-0 from '!macros!eaGivmWKL1mBFndB' @ 72057594037927935 : 1 .. '!macros!eaGivmWKL1mBFndB' @ 0 : 0; will stop at (end)
+2025/05/29-18:15:41.135 21ff4 Manual compaction at level-1 from '!macros!eaGivmWKL1mBFndB' @ 72057594037927935 : 1 .. '!macros!eaGivmWKL1mBFndB' @ 0 : 0; will stop at (end)
