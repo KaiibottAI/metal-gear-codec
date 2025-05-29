@@ -14,7 +14,8 @@
 }
 
 :root[data-mgs-codec-theme="cyberpunk-red"] {
-	--mgs-codec-background-color: #4a0404;
+	/* --mgs-codec-background-color: #4a0404; */
+	--mgs-codec-background-color: #000;
 	--mgs-codec-dialogue-box-color: #ffffff;
 	--mgs-codec-glow-color: #d31919;
 	--mgs-codec-text-color: #d31919;
@@ -50,6 +51,7 @@
 
 #metal-gear-codec .codec-container {
 	display: flex;
+	font-family: var(--mgs-codec-font-family);
 	border: 2px solid var(--mgs-codec-glow-color);
 	background-color: var(--mgs-codec-background-color);
 	color: var(--mgs-codec-text-color);
