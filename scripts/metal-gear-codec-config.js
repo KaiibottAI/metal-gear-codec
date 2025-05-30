@@ -1,9 +1,44 @@
 const moduleMGSCodecName = 'metal-gear-codec';
 
+const dialogueOptions = [
+    'DATA SYNC IN PROGRESS', 'PACKET DELIVERY CONFIRMED', 'ENCRYPTED PAYLOAD DEPLOYED',
+    'FILE TRANSFER COMPLETE', 'MEMORY CORES LINKED', 'SYNCING DATA MODULES',
+    'ARCHIVE ACCESSED', 'FILE SYSTEM ONLINE', 'DATA STREAM INTEGRATED',
+    'INFORMATION LINK STABLE', 'COMMUNICATIONS ONLINE', 'TRANSMISSION IN PROGRESS',
+    'SIGNAL BROADCASTING', 'RECEIVING UPLINK', 'MESSAGE RECEIVED',
+    'DATA STREAM ACTIVE', 'AUDIO FEED LINKED', 'LIVE FEED ENGAGED',
+    'UPLINK CONFIRMED', 'OPENING CHANNEL', 'BEACON EMITTING',
+    'TRANSMISSION COMPLETE', 'REPLY SIGNAL RECEIVED', 'SECURE CHANNEL CONNECTING',
+    'SECURE LINK ESTABLISHED', 'TRANSMISSION LINKED', 'ENCRYPTED LINK ACTIVE',
+    'HANDSHAKE COMPLETE', 'SIGNAL ACQUIRED', 'AUTHENTICATION ACCEPTED',
+    'PROTOCOL SYNCHRONIZED', 'CYBERLINK INITIATED', 'CONNECTION ENCRYPTED',
+    'FREQUENCY LOCKED', 'ENCRYPTION VERIFIED', 'COMM TUNNEL STABILIZED',
+    'SECURE PORT ENGAGED', 'CHANNEL OMEGA ONLINE'
+];
+
+const frequencyOptions = [
+    "420.69", "111.11", "69.69", "57.89", "123.45", "89.98", "199.7"
+];
+
 class MGSCodec extends Application {
     constructor(data = {}, options = {}) {
         super(options);
         this._setData(data);
+    }
+
+    async close(options) {
+        if (this._onCloseCallback) this._onCloseCallback();
+
+        // cleanup of MGSCodec after pressinx "X Close" in Dialog
+        if (ui.MGSCodec === this) {
+            ui.MGSCodec = undefined;
+        }
+
+        return super.close(options);
+    }
+
+    onClose(callback) {
+        this._onCloseCallback = callback;
     }
 
     _setData({ leftId = null, rightId = null } = {}) {
@@ -12,10 +47,8 @@ class MGSCodec extends Application {
 
         this.leftPortrait = leftActor?.img || "modules/metal-gear-codec/images/static.gif";
         this.leftName = leftActor?.name || "???";
-
         this.rightPortrait = rightActor?.img || "modules/metal-gear-codec/images/static.gif";
         this.rightName = rightActor?.name || "???";
-
         this.name = leftActor?.name || rightActor?.name || '???';
         this.frequency = frequencyOptions[Math.floor(Math.random() * frequencyOptions.length)];
         this.text = dialogueOptions[Math.floor(Math.random() * dialogueOptions.length)];
@@ -35,9 +68,7 @@ class MGSCodec extends Application {
 
     updateData(data) {
         this._setData(data);
-        if (this.rendered) {
-            this.render(true, { focus: false });
-        }
+        if (this.rendered) this.render(true, { focus: false });
     }
 
     static get defaultOptions() {
@@ -55,7 +86,6 @@ class MGSCodec extends Application {
 
     activateListeners(html) {
         super.activateListeners(html);
-
         const $barsCon = html.find('#bars-con');
         const $barWidth = $barsCon.children();
 
@@ -66,10 +96,9 @@ class MGSCodec extends Application {
         let bSignal = $barWidth.length;
         let signalCount = bSignal;
         let dBar = true;
-        let endFunc = false;
         let running = false;
 
-        function barSignal(chk = false) {
+        const barSignal = (chk = false) => {
             if (!running || chk) {
                 setTimeout(() => {
                     running = true;
@@ -82,160 +111,130 @@ class MGSCodec extends Application {
                         $barWidth.eq(signalCount).css('background-color', 'var(--mgs-codec-bar-off)');
                         if (signalCount === bSignal) {
                             dBar = true;
-                            if (endFunc) {
-                                running = false;
-                                return;
-                            }
+                            running = false;
+                            return;
                         }
                     }
                     barSignal(true);
                 }, 100);
             }
-        }
+        };
 
         barSignal();
         $barWidth.eq(0).css('display', 'none');
     }
 }
 
-const dialogueOptions = [
-    'DATA SYNC IN PROGRESS',
-    'PACKET DELIVERY CONFIRMED',
-    'ENCRYPTED PAYLOAD DEPLOYED',
-    'FILE TRANSFER COMPLETE',
-    'MEMORY CORES LINKED',
-    'SYNCING DATA MODULES',
-    'ARCHIVE ACCESSED',
-    'FILE SYSTEM ONLINE',
-    'DATA STREAM INTEGRATED',
-    'INFORMATION LINK STABLE',
-    'COMMUNICATIONS ONLINE',
-    'TRANSMISSION IN PROGRESS',
-    'SIGNAL BROADCASTING',
-    'RECEIVING UPLINK',
-    'MESSAGE RECEIVED',
-    'DATA STREAM ACTIVE',
-    'AUDIO FEED LINKED',
-    'LIVE FEED ENGAGED',
-    'UPLINK CONFIRMED',
-    'OPENING CHANNEL',
-    'BEACON EMITTING',
-    'TRANSMISSION COMPLETE',
-    'REPLY SIGNAL RECEIVED',
-    'SECURE CHANNEL CONNECTING',
-    'SECURE LINK ESTABLISHED',
-    'TRANSMISSION LINKED',
-    'ENCRYPTED LINK ACTIVE',
-    'HANDSHAKE COMPLETE',
-    'SIGNAL ACQUIRED',
-    'AUTHENTICATION ACCEPTED',
-    'PROTOCOL SYNCHRONIZED',
-    'CYBERLINK INITIATED',
-    'CONNECTION ENCRYPTED',
-    'FREQUENCY LOCKED',
-    'ENCRYPTION VERIFIED',
-    'COMM TUNNEL STABILIZED',
-    'SECURE PORT ENGAGED',
-    'CHANNEL OMEGA ONLINE'
-];
+const Events = {
+    Close: 'close',
+    Open: 'open',
+};
 
-const frequencyOptions = [
-    "420.69", "111.11", "69.69", "57.89", "123.45", "89.98", "199.7"
-];
+class Codec {
+    tokens = [];
+    subscribers = [];
 
-function _showCodecForIds(actorIds = []) {
-    const data = actorIds.length === 1
-        ? { leftId: null, rightId: actorIds[0] }
-        : { leftId: actorIds[0] || null, rightId: actorIds[1] || null };
-
-    ui['MGSCodec'] ??= new MGSCodec(data);
-
-    if (ui.MGSCodec.rendered) {
-        ui.notifications.info(`${moduleMGSCodecName} | Ending Transmission`);
-        return ui.MGSCodec.close();
+    constructor(firstToken, secondToken) {
+        const left = firstToken ?? canvas.tokens.controlled[0];
+        const right = secondToken ?? canvas.tokens.controlled[1];
+        this.tokens = [this.resolveId(left), this.resolveId(right)];
     }
 
-    ui.notifications.info(`${moduleMGSCodecName} | Receiving Transmission`);
-    ui.MGSCodec.updateData(data);
-    ui.MGSCodec.render(true);
-}
-
-// Might come in handy for somebody
-function closeCodecForAll() {
-    if (game.user !== game.users.activeGM) {
-        return ui.notifications.warn(`${moduleMGSCodecName} | Only the GM can open the codec for everyone`);
+    setLeftToken(token) {
+        if (!token) return console.error("No token provided.");
+        this.tokens[0] = this.resolveId(token);
     }
 
-    if (ui.MGSCodec.rendered) {
-        ui.notifications.info(`${moduleMGSCodecName} | Ending Transmission`);
-        return ui.MGSCodec.close();
-    }
-    return ui.notifications.warn(`${moduleMGSCodecName} | Trying to close transmiotion that was not established beforehand`);
-}
-
-// Player might want to close call by himself
-function closeCodecForAllPermissionFree() {
-    if (ui.MGSCodec.rendered) {
-        ui.notifications.info(`${moduleMGSCodecName} | Ending Transmission`);
-        return ui.MGSCodec.close();
-    }
-    return ui.notifications.warn(`${moduleMGSCodecName} | Trying to close transmiotion that was not established beforehand`);
-}
-
-// Called by GM to open codec window for all users. OG version to keep up with not ruining previous implementations
-function openCodecForAll() {
-    if (game.user !== game.users.activeGM) {
-        return ui.notifications.warn(`${moduleMGSCodecName} | Only the GM can open the codec for everyone`);
+    setRightToken(token) {
+        if (!token) return console.error("No token provided.");
+        this.tokens[1] = this.resolveId(token);
     }
 
-    const controlled = canvas.tokens.controlled.slice(0, 2);
-    const actorIds = controlled.map(t => t.actor.id);
+    open() {
+        // Only GM can open Codec
+        if (game.user !== game.users.activeGM) {
+            return ui.notifications.warn(`${moduleMGSCodecName} | Only the GM can open the codec for everyone`);
+        }
 
-    game.socket.emit(`module.${moduleMGSCodecName}`, {
-        action: "openCodec",
-        data: { actorIds }
-    });
+        // Stoping execution of opening codec second time when another is already opened
+        if (ui.MGSCodec) {
+            return ui.notifications.warn(`${moduleMGSCodecName} | Codec is already opened`)
+        }
 
-    _showCodecForIds(actorIds);
-}
+        const data = { leftId: this.tokens[0], rightId: this.tokens[1] };
+        const codec = new MGSCodec(data);
+        codec.onClose(() => {
+            this.emit(Events.Close)
+        });
 
-// Enhanced version: open Codec UI for everyone with optional arguments
-async function openCodecForAllEnhanced({ firstToken, secondToken } = {}) {
-    if (game.user !== game.users.activeGM) {
-        return ui.notifications.warn(`${moduleMGSCodecName} | Only the GM can open the codec for everyone`);
+        ui.MGSCodec = codec
+
+        ui.notifications.info(`${moduleMGSCodecName} | Receiving Transmission`);
+        ui.MGSCodec.updateData(data);
+        this.emit(Events.Open);
+
+        // Emiting signal to ALL players, so they will have new Codec Dialog displayed
+        game.socket.emit(`module.${moduleMGSCodecName}`, {
+            action: "openCodec",
+            data: { codec: ui.MGSCodec }
+        });
+
+        ui.MGSCodec.render(true);
     }
 
-    const resolveId = (t) => {
+    close() {
+        // Player might need to have an option to close transmition by themselves.
+
+        // if (game.user !== game.users.activeGM) {
+        //     return ui.notifications.warn(`${moduleMGSCodecName} | Only the GM can open the codec for everyone`);
+        // }
+
+        if (!ui.MGSCodec) {
+            return ui.notifications.warn(`${moduleMGSCodecName} | There is no Codec to be closed`)
+        }
+        ui.MGSCodec?.close();
+        ui.MGSCodec = undefined
+    }
+
+    toggle() {
+        if (ui.MGSCodec) this.close()
+        else this.open()
+    }
+
+    reverse(n) {
+        // reverse at specific number of tokens
+        console.log(n, this.tokens.filter(o => !!o).length)
+        if (n && this.tokens.filter(o => !!o).length == n) this.tokens = this.tokens.reverse();
+
+        // reverse always if n was not given
+        else if (!n) this.tokens = this.tokens.reverse();
+        return this;
+    }
+
+    on(event, callback) {
+        this.subscribers.push({ event, callback });
+        return this;
+    }
+
+    emit(event) {
+        for (const sub of this.subscribers) {
+            if (event === sub.event) sub.callback();
+        }
+    }
+
+    resolveId(t) {
         if (!t) return null;
         if (typeof t === "string") return t;
         if (t.actor) return t.actor.id;
         if (t.id) return t.id;
         return null;
-    };
-
-    let actorIds = [];
-    const lId = resolveId(firstToken);
-    const rId = resolveId(secondToken);
-
-    if (lId || rId) {
-        if (lId) actorIds.push(lId);
-        if (rId) actorIds.push(rId);
-    } else {
-        const controlled = canvas.tokens.controlled.slice(0, 2);
-        if (!controlled.length) {
-            ui.notifications.warn(`${moduleMGSCodecName} | Select one or two tokens, or pass them in explicitly.`);
-            return;
-        }
-        actorIds = controlled.map(t => t.actor.id);
     }
-
-    game.socket.emit(`module.${moduleMGSCodecName}`, {
-        action: "openCodec",
-        data: { actorIds }
-    });
-
-    _showCodecForIds(actorIds);
 }
+
+const openCodecForAll = () => {
+    return new Codec().reverse(1).toggle();
+}
+
 
 function applyCodecTheme(theme) {
     game.settings.set(moduleMGSCodecName, 'codecTheme', theme);
@@ -244,7 +243,7 @@ function applyCodecTheme(theme) {
 
 function updateCodecFont(selectedFont) {
     document.documentElement?.style.setProperty("--mgs-codec-font-family", `"${selectedFont}"`);
-};
+}
 
 Hooks.once("init", () => {
     game.settings.register(moduleMGSCodecName, 'codecTheme', {
@@ -260,9 +259,7 @@ Hooks.once("init", () => {
             "fallout-nuclear": "Fallout Terminal Green"
         },
         default: 'classic',
-        onChange: (value) => {
-            applyCodecTheme(value);
-        },
+        onChange: applyCodecTheme,
         requiresReload: false
     });
 });
@@ -270,23 +267,20 @@ Hooks.once("init", () => {
 Hooks.once("ready", () => {
     game.socket.on(`module.${moduleMGSCodecName}`, (payload) => {
         if (payload.action === "openCodec") {
-            const { actorIds } = payload.data;
-            _showCodecForIds(actorIds);
+            const { codec } = payload.data;
+            codec.render(true);
         }
     });
 
     game.settings.register(moduleMGSCodecName, 'codecFont', {
         name: "Codec Font",
-        hint: "Select the font for the Codec Communication. Supports Custom Fonts if uploaded to Foundry Font Settings.",
+        hint: "Select the font for the Codec Communication.",
         scope: "client",
         config: true,
         type: String,
         choices: Object.fromEntries(Object.keys(FontConfig.getAvailableFontChoices()).map(f => [f, f])),
         default: "Orbitron",
-        onChange: (value) => {
-            updateCodecFont(value);
-            game.settings.set(moduleMGSCodecName, 'codecFont', value);
-        },
+        onChange: updateCodecFont,
         requiresReload: false
     });
 
