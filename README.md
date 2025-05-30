@@ -36,11 +36,55 @@ git clone https://github.com/KaiibottAI/metal-gear-codec.git
 
 ## How Does It Work?
 
-The Codec Communication screen will supply the Name and Image for the left and right sides by the GM's currently selected tokens. If you select only one (1) token, their details will be supplied to the right side of the Codec screen while if you select two (2) tokens, the first token will supply the left side and the second token will supply the right side. These utilize the `actor.img`, so if you have different art for the Portrait and the Token, this will ultilize the portrait.
+The Codec Communication screen displays the name and image for both the left and right sides based on the GM's currently selected tokens:
+
+* If only one token is selected, its details appear on the right side.
+* If two tokens are selected, the first token appears on the left, and the second on the right.
+
+Alternatively, token data can be passed as parameters, which will override any selected tokens.
+
+> **Note:** The token art is sourced from actor.img, meaning it will use the portrait image if it's different from the token's visual.
 
 ## Macros available
 
-Toggle the Codec Communication Window. This macro is included in a compendium on install for ease of access. This is only usable by the active GM of the world.
+Toggle the Codec Communication Window. This macro is included in a compendium on install for ease of access. This is only usable by the **active GM** of the world.
+
 ```javascript
-openCodecForAll();
+
+// Opens or closes the Codec window.
+// If only one token is selected, it's placed on the right side.
+openCodecForAll(); // same as new Codec().reverse(1).toggle()
+
+// Opens a new Codec window. Does nothing if one is already open.
+new Codec().open();
+
+// Closes the Codec window if open. Does nothing if already closed.
+new Codec().close();
+
+// Toggles the Codec window open/closed based on its current state.
+new Codec().toggle();
+
+// Reverses the token sides.
+// Optional `n` parameter controls when to reverse:
+// n === 1 → reverse if only 1 token is provided (token on left, right is blank)
+// n === 2 → reverse if 2 tokens are provided (token order swapped)
+new Codec().reverse(n);
+
+/*
+You can override selected tokens by passing token data as parameters.
+Accepted formats:
+- A string (actor ID)
+- An object (actor with an ID)
+*/
+new Codec(firstToken, "321GHDAS231").open();
+
+/*
+Codec supports events when the window is opened or closed,
+either via the UI or programmatically.
+*/
+const codec = new Codec();
+codec.on('open', () => console.log('Codec opened!'));
+codec.on('close', () => console.log('Codec closed!'));
+codec.open();
+
 ```

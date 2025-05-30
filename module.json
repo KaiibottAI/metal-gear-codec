@@ -1,7 +1,7 @@
 {
     "id": "metal-gear-codec",
     "title": "Metal Gear Codec",
-    "version": "1.1.5",
+    "version": "2.0.0",
     "compatibility": {
         "minimum": "11",
         "verified": "12"
