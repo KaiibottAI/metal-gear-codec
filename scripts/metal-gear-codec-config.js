@@ -176,7 +176,10 @@ class Codec {
         // Emiting signal to ALL players, so they will have new Codec Dialog displayed
         game.socket.emit(`module.${moduleMGSCodecName}`, {
             action: "openCodec",
-            data: { codec: ui.MGSCodec }
+            data: {
+                leftId: this.tokens[0],
+                rightId: this.tokens[1]
+            }
         });
 
         ui.MGSCodec.render(true);
@@ -192,6 +195,12 @@ class Codec {
         if (!ui.MGSCodec) {
             return ui.notifications.warn(`${moduleMGSCodecName} | There is no Codec to be closed`)
         }
+
+        // Emit close event to all clients
+        game.socket.emit(`module.${moduleMGSCodecName}`, {
+            action: "closeCodec"
+        });
+
         ui.MGSCodec?.close();
         ui.MGSCodec = undefined
     }
@@ -267,8 +276,18 @@ Hooks.once("init", () => {
 Hooks.once("ready", () => {
     game.socket.on(`module.${moduleMGSCodecName}`, (payload) => {
         if (payload.action === "openCodec") {
-            const { codec } = payload.data;
+            const { leftId, rightId } = payload.data;
+            const codec = new MGSCodec({ leftId, rightId });
+            ui.MGSCodec = codec
             codec.render(true);
+        }
+
+        if (payload.action === "closeCodec") {
+            console.log("Closing codec", ui.MGSCodec)
+            if (ui.MGSCodec) {
+                ui.MGSCodec.close();
+                ui.MGSCodec = undefined;
+            }
         }
     });
 
