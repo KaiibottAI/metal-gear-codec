@@ -160,6 +160,28 @@ function _showCodecForIds(actorIds = []) {
     ui.MGSCodec.render(true);
 }
 
+// Might come in handy for somebody
+function closeCodecForAll() {
+    if (game.user !== game.users.activeGM) {
+        return ui.notifications.warn(`${moduleMGSCodecName} | Only the GM can open the codec for everyone`);
+    }
+
+    if (ui.MGSCodec.rendered) {
+        ui.notifications.info(`${moduleMGSCodecName} | Ending Transmission`);
+        return ui.MGSCodec.close();
+    }
+    return ui.notifications.warn(`${moduleMGSCodecName} | Trying to close transmiotion that was not established beforehand`);
+}
+
+// Player might want to close call by himself
+function closeCodecForAllPermissionFree() {
+    if (ui.MGSCodec.rendered) {
+        ui.notifications.info(`${moduleMGSCodecName} | Ending Transmission`);
+        return ui.MGSCodec.close();
+    }
+    return ui.notifications.warn(`${moduleMGSCodecName} | Trying to close transmiotion that was not established beforehand`);
+}
+
 // Called by GM to open codec window for all users. OG version to keep up with not ruining previous implementations
 function openCodecForAll() {
     if (game.user !== game.users.activeGM) {
